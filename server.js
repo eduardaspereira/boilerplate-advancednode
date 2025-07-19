@@ -14,8 +14,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.route('/').get((req, res) => {
-  res.render('index');
+  res.render('index', {
+    title: 'Home Page',
+    message: 'Hello',
+    showLogin: true,
+    showRegistration: true,
+    showSocialAuth: true
+  });
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
