@@ -1,6 +1,6 @@
 'use strict';
 const cors = require('cors');
-app.use(cors());
+
 const express = require('express');
 
 let pug= require('pug');
@@ -12,7 +12,7 @@ fccTesting(app); //For FCC testing purposes
 app.use("/public", express.static(process.cwd() + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
 app.set('view engine', 'pug')
 app.set('views', './views/pug')
 
