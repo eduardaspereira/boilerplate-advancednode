@@ -66,15 +66,27 @@ myDB(async client => {
 
 
   passport.use(new LocalStrategy((username, password, done) => {
-  myDataBase.findOne({ username: username }, (err, user) => {
-    console.log(`User ${username} attempted to log in.`);
-    if (err) return done(err);
-    if (!user) return done(null, false);
-    if (password !== user.password) return done(null, false);
-    return done(null, user);
-  });
-}));
+    myDataBase.findOne({ username: username }, (err, user) => {
+      console.log(`User ${username} attempted to log in.`);
+      if (err) return done(err);
+      if (!user) return done(null, false);
+      if (password !== user.password) return done(null, false);
+      return done(null, user);
+    });
+  }));
 
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/');
+  };
+
+  app
+  .route('/profile')
+  .get(ensureAuthenticated, (req,res) => {
+      res.render('profile');
+  });
 
 }).catch(e => {
   app.route('/').get((req, res) => {
