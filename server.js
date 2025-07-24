@@ -50,9 +50,11 @@ myDB(async client => {
     res.redirect('/profile');
   })
 
-  app.route('/profile').get((req,res) => {
-    res.render('profile');
-  })
+  app
+  .route('/profile')
+  .get(ensureAuthenticated, (req,res) => {
+      res.render('profile');
+  });
 
   passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -75,24 +77,21 @@ myDB(async client => {
     });
   }));
 
-  function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/');
-  };
+  
 
-  app
-  .route('/profile')
-  .get(ensureAuthenticated, (req,res) => {
-      res.render('profile');
-  });
 
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('index', { title: e, message: 'Unable to connect to database' });
   });
 });
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/');
+};
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
