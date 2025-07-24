@@ -58,6 +58,12 @@ myDB(async client => {
       res.render('profile',{ username: req.user.username });
   });
 
+  app.route('/logout')
+  .get((req, res) => {
+    req.logout();
+    res.redirect('/');
+  });
+  
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
@@ -79,11 +85,7 @@ myDB(async client => {
     });
   }));
 
-  app.route('/logout')
-  .get((req, res) => {
-    req.logout();
-    res.redirect('/');
-  });
+  
   
   app.use((req, res, next) => {
   res.status(404)
@@ -122,7 +124,7 @@ myDB(async client => {
       res.redirect('/profile');
     }
   );
-  
+
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('index', { title: e, message: 'Unable to connect to database' });
