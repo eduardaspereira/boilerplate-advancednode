@@ -2,9 +2,10 @@
 const cors = require('cors');
 
 const express = require('express');
-
+const myDB = require('./connection');
 const pug= require('pug');
 const fccTesting = require('./freeCodeCamp/fcctesting.js');
+const LocalStrategy = require('passport-local');
 
 const session = require('express-session');
 const passport = require("passport");
@@ -21,6 +22,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set('view engine', 'pug')
 app.set('views', './views/pug')
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
@@ -49,19 +60,6 @@ myDB(async client => {
     res.render('index', { title: e, message: 'Unable to connect to database' });
   });
 });
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
