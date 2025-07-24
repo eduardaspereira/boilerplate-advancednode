@@ -1,5 +1,6 @@
 'use strict';
-
+const cors = require('cors');
+app.use(cors());
 const express = require('express');
 
 let pug= require('pug');
@@ -16,7 +17,7 @@ app.set('view engine', 'pug')
 app.set('views', './views/pug')
 
 app.route('/').get((req, res) => {
-  res.render('index', { title: 'Hello', message: 'Please log in' });
+  res.render('index')
 });
 
 
