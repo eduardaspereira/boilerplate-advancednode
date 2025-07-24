@@ -50,7 +50,7 @@ myDB(async client => {
 
   app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
     res.redirect('/profile');
-  })
+  });
 
   app
   .route('/profile')
@@ -63,7 +63,7 @@ myDB(async client => {
     req.logout();
     res.redirect('/');
   });
-  
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
